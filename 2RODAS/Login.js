@@ -1,6 +1,6 @@
 'use strict';
 
-const API_AUTH = 'http://localhost:8082/api/auth';
+const API_URL = 'https://spring-boot-production-e4cd.up.railway.app/api/auth';
 
 let modoAtual = 'login'; // 'login' ou 'cadastro'
 

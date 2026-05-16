@@ -5,7 +5,7 @@
 
 'use strict';
 
-const API_URL = 'http://localhost:8082/api/pedidos';
+const API_URL = 'https://spring-boot-production-e4cd.up.railway.app/api/pedidos';
 
 const PedidoCrud = {
 

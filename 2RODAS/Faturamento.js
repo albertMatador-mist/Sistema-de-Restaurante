@@ -1,6 +1,6 @@
 'use strict';
 
-const API_FAT = 'http://localhost:8082/api/faturamento';
+const API_URL = 'https://spring-boot-production-e4cd.up.railway.app/api/faturamento';
 let grafico = null;
 
 // ── SESSÃO ────────────────────────────────────────────────────
