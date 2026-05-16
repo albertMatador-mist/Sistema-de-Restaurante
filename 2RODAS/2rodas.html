@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assados Melhor da Cidade — Jaraguá do Sul</title>
+  <link rel="stylesheet" href="Style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="header-brand">
+        <div class="logo-area">
+          <span class="logo-icon">🔥</span>
+          <div>
+            <h1 class="logo-title">Assados Melhor da Cidade</h1>
+            <p class="logo-sub">Jaraguá do Sul — Santa Catarina</p>
+          </div>
+        </div>
+        <a href="faturamento.html" class="btn btn-ghost btn-ghost-strong">📊 Faturamento</a>
+      </div>
+      <div class="header-meta">
+        <span id="usuario-nome" style="color:#ffd166;font-size:.85rem;font-weight:700;"></span>
+        <div class="header-badge">🚴 Retirada Rápida</div>
+        <button class="btn btn-ghost btn-ghost-strong" onclick="sair()">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main>
+
+    <!-- PAINEL DE PEDIDOS -->
+    <section class="panel" id="painel-pedidos">
+      <div class="panel-header">
+        <h2>� Fila de Retirada</h2>
+        <button class="btn btn-primary" id="btn-novo-pedido" onclick="abrirModal()">+ Registrar Pedido</button>
+      </div>
+
+      <!-- FILTROS -->
+      <div class="filtros">
+        <input type="text" id="filtro-texto" placeholder="🔍 Buscar por atendente ou cliente..." oninput="renderTabela()" />
+        <select id="filtro-status" onchange="renderTabela()">
+          <option value="">Todos os status</option>
+          <option value="Preparando">Preparando</option>
+          <option value="Pronto">Pronto pra Retirar</option>
+          <option value="Retirado">Retirado</option>
+        </select>
+      </div>
+
+      <!-- TABELA -->
+      <div class="table-wrap">
+        <table id="tabela-pedidos">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Cliente</th>
+              <th>Atendente</th>
+              <th>Prato</th>
+              <th>Acompanhamento</th>
+              <th>Qtd</th>
+              <th>Obs</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+        <p id="msg-vazio" class="msg-vazio hidden">Nenhum pedido encontrado.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL CRUD -->
+  <div id="modal-overlay" class="modal-overlay hidden" onclick="fecharModalOverlay(event)">
+    <div class="modal" id="modal">
+      <div class="modal-header">
+        <h3 id="modal-titulo">Novo Pedido</h3>
+        <button class="btn-close" onclick="fecharModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="form-id" />
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Cliente *</label>
+            <input type="text" id="form-cliente" placeholder="Nome do cliente" />
+          </div>
+          <div class="form-group">
+            <label>Atendente *</label>
+            <input type="text" id="form-atendente" placeholder="Nome do atendente" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Prato *</label>
+          <select id="form-prato">
+            <option value="">Selecione o prato...</option>
+            <option value="Frango Assado">🍗 Frango Assado</option>
+            <option value="Carne Assada (Bovina)">🥩 Carne Assada (Bovina)</option>
+            <option value="Carne Suína Assada">🐷 Carne Suína Assada</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Acompanhamento</label>
+          <select id="form-acomp">
+            <option value="Nenhum">Sem acompanhamento</option>
+            <option value="Salada de Batata">🥗 Salada de Batata</option>
+            <option value="Maionese">🫙 Maionese</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Quilos *</label>
+            <input type="text" id="form-qtd" value="1" placeholder="Ex: 7,5 ou 7.5" />
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select id="form-status">
+              <option value="Preparando">Preparando</option>
+              <option value="Pronto">Pronto pra Retirar</option>
+              <option value="Retirado">Retirado</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Observações</label>
+          <textarea id="form-obs" placeholder="Ex: sem sal, bem passado, etc." rows="2"></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="fecharModal()">Cancelar</button>
+        <button class="btn btn-primary" onclick="salvarPedido()">Salvar Pedido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL CONFIRMAR DELETE -->
+  <div id="modal-del-overlay" class="modal-overlay hidden" onclick="fecharDelOverlay(event)">
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h3>Excluir Pedido?</h3>
+        <button class="btn-close" onclick="fecharDel()">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>Tem certeza que deseja remover o pedido <strong id="del-desc"></strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="fecharDel()">Cancelar</button>
+        <button class="btn btn-danger" onclick="confirmarDelete()">Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast hidden"></div>
+<script src="2rodasCrud.js"></script>
+  <script src="2rodas.js"></script>
+</body>
+</html>

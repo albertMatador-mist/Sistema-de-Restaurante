@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Faturamento — Assados Melhor da Cidade</title>
+  <link rel="stylesheet" href="Style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --vermelho: #d62828;
+      --vermelho-dark: #a71c1c;
+      --dourado: #f3a712;
+      --bg: #1a1a1a;
+      --bg2: #252525;
+      --bg3: #2e2e2e;
+      --borda: rgba(255,255,255,.08);
+      --texto: #f0ebe3;
+      --texto2: rgba(240,235,227,.55);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--texto);
+      font-family: 'Lato', sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--vermelho-dark), var(--vermelho));
+      border-bottom: 3px solid var(--dourado);
+      padding: 0 32px;
+    }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 900; color: #fff; }
+    .logo-sub { font-size: .7rem; color: rgba(255,255,255,.7); letter-spacing: .05em; text-transform: uppercase; }
+    .header-right { display: flex; align-items: center; gap: 16px; }
+    #usuario-nome { color: var(--dourado); font-size: .82rem; font-weight: 700; }
+    .btn-sair, .btn-voltar {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,.3);
+      color: #fff;
+      padding: 6px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: .78rem;
+      font-family: 'Lato', sans-serif;
+      text-decoration: none;
+      transition: all .2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-sair:hover, .btn-voltar:hover { background: rgba(255,255,255,.1); }
+
+    main { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+    .filtros-card {
+      background: var(--bg2);
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 28px;
+    }
+    .filtros-card h2 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--dourado); margin-bottom: 18px; }
+    .filtros-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: end; }
+    .filtros-grid .form-group label {
+      display: block;
+      font-size: .75rem;
+      color: var(--texto2);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 6px;
+    }
+    .filtros-grid select,
+    .filtros-grid input[type="number"] {
+      width: 100%;
+      background: var(--bg3);
+      border: 1px solid var(--borda);
+      border-radius: 8px;
+      color: var(--texto);
+      padding: 9px 12px;
+      font-size: .9rem;
+      font-family: 'Lato', sans-serif;
+      outline: none;
+      transition: border-color .2s;
+    }
+    .filtros-grid select:focus,
+    .filtros-grid input[type="number"]:focus { border-color: var(--vermelho); }
+    .filtros-grid select option { background: var(--bg3); }
+    .btn-buscar {
+      background: linear-gradient(135deg, var(--vermelho), #f94144);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 24px;
+      font-size: .9rem;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      transition: all .2s;
+      letter-spacing: .04em;
+    }
+    .btn-buscar:hover { background: linear-gradient(135deg, #f94144, var(--dourado)); transform: translateY(-1px); }
+
+    .cards-resumo { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .card-resumo {
+      background: var(--bg2);
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      padding: 20px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-resumo::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+    .card-resumo.total::before   { background: linear-gradient(90deg, var(--vermelho), var(--dourado)); }
+    .card-resumo.pedidos::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
+    .card-resumo.media::before   { background: linear-gradient(90deg, #10b981, #34d399); }
+    .card-resumo .card-label { font-size: .72rem; color: var(--texto2); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 8px; }
+    .card-resumo .card-valor { font-size: 1.7rem; font-weight: 700; font-family: 'Playfair Display', serif; }
+    .card-resumo.total   .card-valor { color: var(--dourado); }
+    .card-resumo.pedidos .card-valor { color: #60a5fa; }
+    .card-resumo.media   .card-valor { color: #34d399; }
+
+    .chart-section {
+      background: var(--bg2);
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 28px;
+    }
+    .chart-section h2 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--dourado); margin-bottom: 18px; }
+    .chart-wrap { position: relative; width: 100%; height: 220px; }
+
+    .secao-atendentes {
+      background: var(--bg2);
+      border: 1px solid var(--borda);
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 28px;
+    }
+    .secao-atendentes h2 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--dourado); margin-bottom: 18px; }
+    .atendentes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+    .card-atendente {
+      background: var(--bg3);
+      border: 1px solid var(--borda);
+      border-radius: 10px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--vermelho-dark), var(--vermelho));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1rem; color: #fff;
+      flex-shrink: 0;
+      border: 2px solid var(--dourado);
+    }
+    .card-atendente .nome  { font-size: .88rem; font-weight: 700; color: var(--texto); }
+    .card-atendente .valor { font-size: 1.1rem; font-weight: 700; color: var(--dourado); }
+
+    .secao-tabela { background: var(--bg2); border: 1px solid var(--borda); border-radius: 14px; overflow: hidden; }
+    .secao-tabela-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px; border-bottom: 1px solid var(--borda);
+    }
+    .secao-tabela-header h2 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--dourado); }
+    .badge-count { background: var(--vermelho); color: #fff; font-size: .72rem; font-weight: 700; padding: 3px 10px; border-radius: 20px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead tr { background: var(--bg3); }
+    thead th { padding: 11px 16px; text-align: left; font-size: .72rem; font-weight: 700; color: var(--texto2); text-transform: uppercase; letter-spacing: .07em; white-space: nowrap; }
+    tbody tr { border-top: 1px solid var(--borda); transition: background .15s; }
+    tbody tr:hover { background: rgba(255,255,255,.03); }
+    tbody td { padding: 11px 16px; font-size: .87rem; color: var(--texto); white-space: nowrap; }
+    .prato-cell { display: flex; align-items: center; gap: 6px; }
+    .valor-cell { font-weight: 700; color: var(--dourado); }
+
+    .estado-vazio { text-align: center; padding: 60px 20px; color: var(--texto2); }
+    .estado-vazio .icon { font-size: 3rem; margin-bottom: 12px; }
+    .estado-vazio p { font-size: .95rem; }
+
+    .toast {
+      position: fixed; bottom: 24px; right: 24px;
+      padding: 12px 22px; border-radius: 10px;
+      font-size: .88rem; font-weight: 700;
+      z-index: 9999; box-shadow: 0 8px 24px rgba(0,0,0,.4);
+      transition: opacity .3s;
+    }
+    .toast.hidden { opacity: 0; pointer-events: none; }
+    .toast-success { background: #065f46; color: #6ee7b7; }
+    .toast-error   { background: #7f1d1d; color: #fca5a5; }
+
+    .spinner {
+      display: inline-block; width: 18px; height: 18px;
+      border: 3px solid rgba(255,255,255,.2); border-top-color: #fff;
+      border-radius: 50%; animation: spin .7s linear infinite; vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="logo-area">
+        <img src="Logo.png" style="width:38px;height:38px;border-radius:50%;object-fit:cover;"
+             onerror="this.outerHTML='<span style=font-size:1.6rem>🔥</span>'" alt="Logo" />
+        <div>
+          <div class="logo-title">Assados Melhor da Cidade</div>
+          <div class="logo-sub">Faturamento</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <span id="usuario-nome"></span>
+        <a href="2rodas.html" class="btn-voltar">← Pedidos</a>
+        <button class="btn-sair" onclick="sair()">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <div class="filtros-card">
+      <h2>🔍 Filtros</h2>
+      <div class="filtros-grid">
+        <div class="form-group">
+          <label>Atendente</label>
+          <select id="filtro-atendente">
+            <option value="">Todos</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Dia (opcional)</label>
+          <input type="number" id="filtro-dia" min="1" max="31" placeholder="Ex: 15" />
+        </div>
+        <div class="form-group">
+          <label>Mês</label>
+          <select id="filtro-mes">
+            <option value="1">Janeiro</option>
+            <option value="2">Fevereiro</option>
+            <option value="3">Março</option>
+            <option value="4">Abril</option>
+            <option value="5">Maio</option>
+            <option value="6">Junho</option>
+            <option value="7">Julho</option>
+            <option value="8">Agosto</option>
+            <option value="9">Setembro</option>
+            <option value="10">Outubro</option>
+            <option value="11">Novembro</option>
+            <option value="12">Dezembro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Ano</label>
+          <input type="number" id="filtro-ano" value="2026" min="2020" max="2099" />
+        </div>
+        <div class="form-group">
+          <button class="btn-buscar" id="btn-buscar" onclick="buscarFaturamento()">
+            Buscar Faturamento
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="cards-resumo" id="cards-resumo" style="display:none">
+      <div class="card-resumo total">
+        <div class="card-label">💰 Faturamento Total</div>
+        <div class="card-valor" id="card-total">R$ 0,00</div>
+      </div>
+      <div class="card-resumo pedidos">
+        <div class="card-label">🛵 Pedidos Retirados</div>
+        <div class="card-valor" id="card-qtd">0</div>
+      </div>
+      <div class="card-resumo media">
+        <div class="card-label">📊 Ticket Médio</div>
+        <div class="card-valor" id="card-media">R$ 0,00</div>
+      </div>
+    </div>
+
+    <div class="chart-section" id="chart-section" style="display:none">
+      <h2>📈 Faturamento por Atendente</h2>
+      <div class="chart-wrap">
+        <canvas id="grafico-atendentes" role="img" aria-label="Gráfico de faturamento por atendente"></canvas>
+      </div>
+    </div>
+
+    <div class="secao-atendentes" id="secao-atendentes" style="display:none">
+      <h2>👥 Por Atendente</h2>
+      <div class="atendentes-grid" id="atendentes-grid"></div>
+    </div>
+
+    <div class="secao-tabela" id="secao-tabela" style="display:none">
+      <div class="secao-tabela-header">
+        <h2>📋 Pedidos Retirados</h2>
+        <span class="badge-count" id="badge-count">0 pedidos</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Cliente</th>
+              <th>Atendente</th>
+              <th>Prato</th>
+              <th>Acomp.</th>
+              <th>Qtd (kg)</th>
+              <th>Valor</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-fat"></tbody>
+        </table>
+        <div id="tabela-vazia" class="estado-vazio" style="display:none">
+          <div class="icon">📭</div>
+          <p>Nenhum pedido retirado no período.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="estado-vazio" id="estado-inicial">
+      <div class="icon">📊</div>
+      <p>Selecione os filtros acima e clique em <strong>Buscar Faturamento</strong>.</p>
+    </div>
+
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <script src="Faturamento.js"></script>
+</body>
+</html>

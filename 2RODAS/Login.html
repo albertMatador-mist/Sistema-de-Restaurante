@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Assados 2 RODAS — Login</title>
+  <link rel="stylesheet" href="Style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@300;400;700&display=swap" rel="stylesheet" />
+  <style>
+    .login-wrap {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .login-card {
+      background: #252525;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.1);
+      box-shadow: 0 24px 60px rgba(0,0,0,.6);
+      width: 100%;
+      max-width: 420px;
+      overflow: hidden;
+    }
+
+    .login-header {
+      background: linear-gradient(135deg, #a71c1c 0%, #d62828 60%, #f94144 100%);
+      border-bottom: 4px solid #f3a712;
+      padding: 28px 32px;
+      text-align: center;
+    }
+
+    .login-header .logo-icon {
+      font-size: 2.8rem;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .login-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .login-header p {
+      font-size: .75rem;
+      color: rgba(255,255,255,.8);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .login-body {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .login-footer {
+      padding: 0 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 13px;
+      font-size: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Lato', sans-serif;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      border: none;
+      background: linear-gradient(135deg, #d62828, #f94144);
+      color: #fff;
+      box-shadow: 0 3px 12px rgba(214,40,40,.4);
+      transition: all .2s ease;
+    
+    }
+
+    .btn-login:hover {
+      background: linear-gradient(135deg, #f94144, #f3a712);
+      transform: translateY(-1px);
+    }
+
+    .divider {
+      text-align: center;
+      color: rgba(255,255,255,.3);
+      font-size: .8rem;
+      position: relative;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 42%;
+      height: 1px;
+      background: rgba(255,255,255,.1);
+    }
+    .divider::before { left: 0; }
+    .divider::after  { right: 0; }
+
+    .link-cadastro {
+      text-align: center;
+      font-size: .85rem;
+      color: rgba(255,255,255,.5);
+    }
+
+    .link-cadastro a {
+      color: #ffd166;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .link-cadastro a:hover {
+      text-decoration: underline;
+    }
+
+    /* Modal cadastro */
+    .cadastro-campos {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .cadastro-campos.visivel {
+      display: flex;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-wrap">
+    <div class="login-card">
+
+      <div class="login-header">
+        <img src="Logo.png" class="logo-icon" alt="Logo" style="width:60px;height:60px;object-fit:cover;border-radius:50%;" onerror="this.outerHTML='<span class=logo-icon>🔥</span>'" />
+        <h1>Assados Melhor da Cidade</h1>
+        <p>Jaraguá do Sul - Santa Catarina</p>
+      </div>
+
+      <div class="login-body">
+
+        <!-- Campos sempre visíveis -->
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="input-email" placeholder="seu@email.com" />
+        </div>
+
+        <div class="form-group">
+          <label>Senha *</label>
+          <input type="password" id="input-senha" placeholder="••••••••" />
+        </div>
+
+        <!-- Campos extras só no cadastro -->
+        <div class="cadastro-campos" id="cadastro-campos">
+          <div class="form-group">
+            <label>Nome completo *</label>
+            <input type="text" id="input-nome" placeholder="Seu nome" />
+          </div>
+          <div class="form-group">
+            <label>Perfil</label>
+            <select id="input-perfil">
+              <option value="GARCOM">Garçom / Atendente</option>
+              <option value="ADMIN">Administrador</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+     <div class="login-footer">
+  <button class="btn-login" id="btn-acao" onclick="executarAcao()">Entrar</button>
+  <p class="link-cadastro">
+    <a href="#" onclick="esqueceuSenha()">Esqueci minha senha</a>
+  </p>
+  <div class="divider">ou</div>
+  <p class="link-cadastro" id="link-toggle">
+    Não tem conta? <a href="#" onclick="alternarModo()">Cadastrar</a>
+  </p>
+</div>
+
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="Login.js"></script>
+
+  <!-- FILTROS RÁPIDOS -->
+<div class="filtros-rapidos">
+  <button class="btn-filtro ativo" onclick="filtroRapido('')">Todos</button>
+  <button class="btn-filtro preparando" onclick="filtroRapido('Preparando')">🔥 Preparando</button>
+  <button class="btn-filtro pronto" onclick="filtroRapido('Pronto')">✅ Pronto</button>
+  <button class="btn-filtro retirado" onclick="filtroRapido('Retirado')">🛵 Retirado</button>
+</div>
+
+</body>
+</html>
